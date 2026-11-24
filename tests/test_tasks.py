@@ -10,7 +10,7 @@ def client() -> TestClient:
 
 
 def test_starts_empty(client: TestClient) -> None:
-    assert client.get("/tasks").json() == []
+    assert client.get("/tasks").json() == ["quebrado de propósito"]
 
 
 def test_creates_and_reads_a_task(client: TestClient) -> None:
