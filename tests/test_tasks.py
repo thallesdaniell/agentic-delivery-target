@@ -37,3 +37,10 @@ def test_completes_a_task(client: TestClient) -> None:
 def test_unknown_task_returns_404(client: TestClient) -> None:
     assert client.get("/tasks/99").status_code == 404
     assert client.post("/tasks/99/done").status_code == 404
+
+
+def test_health_returns_ok(client: TestClient) -> None:
+    response = client.get("/health")
+
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}

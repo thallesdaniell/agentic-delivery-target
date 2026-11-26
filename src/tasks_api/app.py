@@ -14,6 +14,10 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
     store = store or TaskStore()
     app = FastAPI(title="tasks-api")
 
+    @app.get("/health")
+    def health() -> dict[str, str]:
+        return {"status": "ok"}
+
     @app.get("/tasks")
     def list_tasks() -> list[Task]:
         return store.list()
