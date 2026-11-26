@@ -10,12 +10,11 @@ Repositório-alvo do [agentic-delivery-lab](https://github.com/thallesdaniell/ag
 - Testes com `pytest` e lint e formatação com `ruff`.
 - CI no GitHub Actions com dois checks obrigatórios, `lint` e `test`, e branch protection na `main`: nada entra sem PR e sem CI verde.
 
-Falta de propósito um `GET /health`. Ele é o primeiro card de exemplo do lab.
-
 ## Endpoints
 
 | Método | Rota | O que faz |
 |---|---|---|
+| `GET` | `/health` | Confirma que a aplicação está no ar |
 | `GET` | `/tasks` | Lista as tarefas |
 | `POST` | `/tasks` | Cria uma tarefa (`{"title": "..."}`) |
 | `GET` | `/tasks/{id}` | Consulta uma tarefa |
