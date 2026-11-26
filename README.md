@@ -15,7 +15,7 @@ Repositório-alvo do [agentic-delivery-lab](https://github.com/thallesdaniell/ag
 | Método | Rota | O que faz |
 |---|---|---|
 | `GET` | `/health` | Confirma que a aplicação está no ar |
-| `GET` | `/tasks` | Lista as tarefas |
+| `GET` | `/tasks` | Lista as tarefas; o parâmetro opcional `done` (`true` ou `false`) filtra por concluídas ou pendentes |
 | `POST` | `/tasks` | Cria uma tarefa (`{"title": "..."}`) |
 | `GET` | `/tasks/{id}` | Consulta uma tarefa |
 | `POST` | `/tasks/{id}/done` | Marca uma tarefa como concluída |
