@@ -43,6 +43,11 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
             raise HTTPException(status_code=404, detail="task not found")
         return task
 
+    @app.delete("/tasks/{task_id}", status_code=status.HTTP_204_NO_CONTENT)
+    def delete_task(task_id: int) -> None:
+        if not store.delete(task_id):
+            raise HTTPException(status_code=404, detail="task not found")
+
     return app
 
 

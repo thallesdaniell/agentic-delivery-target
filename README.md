@@ -19,6 +19,7 @@ Repositório-alvo do [agentic-delivery-lab](https://github.com/thallesdaniell/ag
 | `POST` | `/tasks` | Cria uma tarefa (`{"title": "..."}`) |
 | `GET` | `/tasks/{id}` | Consulta uma tarefa |
 | `POST` | `/tasks/{id}/done` | Marca uma tarefa como concluída |
+| `DELETE` | `/tasks/{id}` | Remove uma tarefa (204 sem corpo; 404 se não existir) |
 
 ## Executar localmente
 
