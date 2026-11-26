@@ -39,6 +39,27 @@ def test_unknown_task_returns_404(client: TestClient) -> None:
     assert client.post("/tasks/99/done").status_code == 404
 
 
+def test_deletes_a_task(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "apagar"})
+
+    response = client.delete("/tasks/1")
+
+    assert response.status_code == 204
+    assert response.content == b""
+
+
+def test_delete_unknown_task_returns_404(client: TestClient) -> None:
+    assert client.delete("/tasks/999").status_code == 404
+
+
+def test_deleted_task_is_gone(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "apagar"})
+    client.delete("/tasks/1")
+
+    assert client.get("/tasks/1").status_code == 404
+    assert client.get("/tasks").json() == []
+
+
 def test_health_returns_ok(client: TestClient) -> None:
     response = client.get("/health")
 
