@@ -39,6 +39,32 @@ def test_unknown_task_returns_404(client: TestClient) -> None:
     assert client.post("/tasks/99/done").status_code == 404
 
 
+@pytest.fixture
+def mixed_client(client: TestClient) -> TestClient:
+    client.post("/tasks", json={"title": "pendente"})
+    client.post("/tasks", json={"title": "concluída"})
+    client.post("/tasks/2/done")
+    return client
+
+
+def test_filters_done_tasks(mixed_client: TestClient) -> None:
+    tasks = mixed_client.get("/tasks", params={"done": "true"}).json()
+
+    assert [t["id"] for t in tasks] == [2]
+
+
+def test_filters_pending_tasks(mixed_client: TestClient) -> None:
+    tasks = mixed_client.get("/tasks", params={"done": "false"}).json()
+
+    assert [t["id"] for t in tasks] == [1]
+
+
+def test_lists_all_tasks_without_filter(mixed_client: TestClient) -> None:
+    tasks = mixed_client.get("/tasks").json()
+
+    assert [t["id"] for t in tasks] == [1, 2]
+
+
 def test_deletes_a_task(client: TestClient) -> None:
     client.post("/tasks", json={"title": "apagar"})
 
