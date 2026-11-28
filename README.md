@@ -17,6 +17,7 @@ Repositório-alvo do [agentic-delivery-lab](https://github.com/thallesdaniell/ag
 | `GET` | `/health` | Confirma que a aplicação está no ar |
 | `GET` | `/tasks` | Lista as tarefas; o parâmetro opcional `done` (`true` ou `false`) filtra por concluídas ou pendentes |
 | `POST` | `/tasks` | Cria uma tarefa (`{"title": "..."}`) |
+| `GET` | `/tasks/stats` | Resumo das tarefas: `{"total": n, "done": n, "pending": n}` |
 | `GET` | `/tasks/{id}` | Consulta uma tarefa |
 | `PATCH` | `/tasks/{id}` | Altera o título (`{"title": "..."}`) sem mudar o estado de concluída; 404 se não existir, 422 se o título for vazio |
 | `POST` | `/tasks/{id}/done` | Marca uma tarefa como concluída |
