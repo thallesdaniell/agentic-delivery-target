@@ -25,6 +25,21 @@ def test_rejects_empty_title(client: TestClient) -> None:
     assert client.post("/tasks", json={"title": ""}).status_code == 422
 
 
+@pytest.mark.parametrize("title", ["", "   ", "\t \n"])
+def test_rejects_blank_title_on_post_and_patch(client: TestClient, title: str) -> None:
+    assert client.post("/tasks", json={"title": title}).status_code == 422
+    client.post("/tasks", json={"title": "ok"})
+    assert client.patch("/tasks/1", json={"title": title}).status_code == 422
+    assert client.get("/tasks/1").json()["title"] == "ok"
+
+
+def test_strips_title_on_post_and_patch(client: TestClient) -> None:
+    created = client.post("/tasks", json={"title": "  abrir o PR  "})
+    assert created.json()["title"] == "abrir o PR"
+    patched = client.patch("/tasks/1", json={"title": "  novo  "})
+    assert patched.json()["title"] == "novo"
+
+
 def test_completes_a_task(client: TestClient) -> None:
     client.post("/tasks", json={"title": "abrir o PR"})
 

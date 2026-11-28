@@ -1,12 +1,14 @@
 """API HTTP de tarefas, com armazenamento em memória."""
 
 from fastapi import FastAPI, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 from tasks_api.store import Task, TaskStore
 
 
 class NewTask(BaseModel):
+    model_config = ConfigDict(str_strip_whitespace=True)
+
     title: str = Field(min_length=1, max_length=200)
 
 
