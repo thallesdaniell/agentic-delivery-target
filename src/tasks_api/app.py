@@ -36,6 +36,14 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
             raise HTTPException(status_code=404, detail="task not found")
         return task
 
+    @app.patch("/tasks/{task_id}")
+    def rename_task(task_id: int, body: NewTask) -> Task:
+        task = store.get(task_id)
+        if task is None:
+            raise HTTPException(status_code=404, detail="task not found")
+        task.title = body.title
+        return task
+
     @app.post("/tasks/{task_id}/done")
     def complete_task(task_id: int) -> Task:
         task = store.complete(task_id)
