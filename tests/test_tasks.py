@@ -68,6 +68,20 @@ def test_filters_done_tasks(mixed_client: TestClient) -> None:
     assert [t["id"] for t in tasks] == [2]
 
 
+def test_stats_empty(client: TestClient) -> None:
+    assert client.get("/tasks/stats").json() == {"total": 0, "done": 0, "pending": 0}
+
+
+def test_stats_mixed(mixed_client: TestClient) -> None:
+    mixed_client.post("/tasks", json={"title": "outra"})
+
+    assert mixed_client.get("/tasks/stats").json() == {
+        "total": 3,
+        "done": 1,
+        "pending": 2,
+    }
+
+
 def test_filters_pending_tasks(mixed_client: TestClient) -> None:
     tasks = mixed_client.get("/tasks", params={"done": "false"}).json()
 

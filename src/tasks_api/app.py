@@ -31,6 +31,12 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
     def create_task(body: NewTask) -> Task:
         return store.add(body.title)
 
+    @app.get("/tasks/stats")
+    def task_stats() -> dict[str, int]:
+        tasks = store.list()
+        done = sum(1 for task in tasks if task.done)
+        return {"total": len(tasks), "done": done, "pending": len(tasks) - done}
+
     @app.get("/tasks/{task_id}")
     def get_task(task_id: int) -> Task:
         task = store.get(task_id)
