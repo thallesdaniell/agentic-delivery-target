@@ -141,3 +141,28 @@ def test_health_returns_ok(client: TestClient) -> None:
 
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+def test_search_by_title_ignores_case(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "Escrever Roadmap"})
+    client.post("/tasks", json={"title": "abrir o PR"})
+
+    found = client.get("/tasks", params={"q": "ROADMAP"}).json()
+
+    assert [task["title"] for task in found] == ["Escrever Roadmap"]
+
+
+def test_search_without_match_returns_empty(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "abrir o PR"})
+
+    assert client.get("/tasks", params={"q": "zzz"}).json() == []
+
+
+def test_search_combines_with_done(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "revisar código"})
+    client.post("/tasks", json={"title": "revisar docs"})
+    client.post("/tasks/2/done")
+
+    found = client.get("/tasks", params={"q": "revisar", "done": True}).json()
+
+    assert [task["id"] for task in found] == [2]
