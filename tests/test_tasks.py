@@ -86,6 +86,27 @@ def test_deleted_task_is_gone(client: TestClient) -> None:
     assert client.get("/tasks").json() == []
 
 
+def test_renames_a_task_keeping_done(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "antigo"})
+    client.post("/tasks/1/done")
+
+    response = client.patch("/tasks/1", json={"title": "novo"})
+
+    assert response.status_code == 200
+    assert response.json() == {"id": 1, "title": "novo", "done": True}
+    assert client.get("/tasks/1").json()["title"] == "novo"
+
+
+def test_rename_missing_task_returns_404(client: TestClient) -> None:
+    assert client.patch("/tasks/99", json={"title": "x"}).status_code == 404
+
+
+def test_rename_rejects_empty_title(client: TestClient) -> None:
+    client.post("/tasks", json={"title": "antigo"})
+
+    assert client.patch("/tasks/1", json={"title": ""}).status_code == 422
+
+
 def test_health_returns_ok(client: TestClient) -> None:
     response = client.get("/health")
 
