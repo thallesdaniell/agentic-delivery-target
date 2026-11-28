@@ -21,11 +21,14 @@ def create_app(store: TaskStore | None = None) -> FastAPI:
         return {"status": "ok"}
 
     @app.get("/tasks")
-    def list_tasks(done: bool | None = None) -> list[Task]:
+    def list_tasks(done: bool | None = None, q: str | None = None) -> list[Task]:
         tasks = store.list()
-        if done is None:
-            return tasks
-        return [task for task in tasks if task.done == done]
+        if done is not None:
+            tasks = [task for task in tasks if task.done == done]
+        if q:
+            needle = q.casefold()
+            tasks = [task for task in tasks if needle in task.title.casefold()]
+        return tasks
 
     @app.post("/tasks", status_code=status.HTTP_201_CREATED)
     def create_task(body: NewTask) -> Task:
